@@ -84,4 +84,4 @@ docker run --rm \
 
 ## 📄 License
 
-MIT © Merly.ai
+[Apache License 2.0](LICENSE) © Merly.ai
