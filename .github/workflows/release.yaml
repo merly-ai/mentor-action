@@ -1,0 +1,41 @@
+name: Release on Tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # semver tags like v1.2.3
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up tag and version info
+        id: versioning
+        run: |
+          echo "TAG=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          MAJOR=$(echo "${GITHUB_REF_NAME}" | sed -E 's/^v([0-9]+).*/\1/')
+          echo "MAJOR_VERSION=$MAJOR" >> "$GITHUB_ENV"
+          echo "RELEASE_NAME=release-$MAJOR" >> "$GITHUB_ENV"
+
+      - name: Template README.md
+        run: |
+          sed "s/{{TAG}}/${TAG}/g" templates/README.md > dist/README.md
+
+      - name: Template action.yaml
+        run: |
+          sed "s/{{TAG}}/${TAG}/g" templates/action.yaml > dist/action.yaml
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: ${{ env.RELEASE_NAME }}
+          files: |
+            dist/README.md
+            dist/action.yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

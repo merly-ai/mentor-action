@@ -1,0 +1,63 @@
+# File: action.yaml
+name: "Merly Mentor Check"
+description: "Runs MerlyMentor inside Docker against your repository."
+branding:
+  icon: check-circle
+  color: white
+
+inputs:
+  mm-key:
+    description: "Merly API key (optional; if provided, must be 4×4 alphanumeric groups separated by hyphens)"
+    required: false
+    pattern: '^[A-Za-z0-9]{4}(?:-[A-Za-z0-9]{4}){3}$'
+  checkout-code:
+    description: "Whether to checkout the repo before running"
+    required: false
+    default: true
+    pattern: '^(true|false)$'
+  path:
+    description: "Custom path to your repository (optional)"
+    required: false
+    default: ${{ github.workspace }}
+  debug:
+    description: "Turn on debug logs for Mentor"
+    required: false
+    default: false
+    pattern: '^(true|false)$'
+  docker-tag:
+    description: "Merly Mentor Docker image tag"
+    required: false
+    default: "{{TAG}}"
+    pattern: '^[A-Za-z0-9._:-]+$'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      if: ${{ inputs.checkout-code == 'true' }}
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Sanity-check inputs
+      shell: bash
+      env:
+        MM_KEY:        ${{ inputs.mm-key }}
+        CHECKOUT_CODE: ${{ inputs.checkout-code }}
+        PATH_INPUT:    ${{ inputs.path }}
+        DEBUG_FLAG:    ${{ inputs.debug }}
+        DOCKER_TAG:    ${{ inputs.docker-tag }}
+      run: bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
+
+    - name: Run MerlyMentor in Docker
+      shell: bash
+      run: |
+        docker run --rm \
+          -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
+          -e REPO="/repo" \
+          -e mm_models_root="/data/.models/" \
+          -v "${{ inputs.path }}:/repo" \
+          -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
+          -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
+          merlyai/mentor:${{ inputs.docker-tag }} \
+          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
