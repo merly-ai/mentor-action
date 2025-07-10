@@ -3,7 +3,7 @@ name: Release on Tag
 on:
   push:
     tags:
-      - 'v*.*.*'  # semver tags like v1.2.3
+      - 'v[0-9]+.[0-9]+.[0-9]+'  # semver tags like v1.2.3
 
 jobs:
   release:
@@ -21,13 +21,9 @@ jobs:
           echo "MAJOR_VERSION=$MAJOR" >> "$GITHUB_ENV"
           echo "RELEASE_NAME=release-$MAJOR" >> "$GITHUB_ENV"
 
-      - name: Template README.md
-        run: |
-          sed "s/{{TAG}}/${TAG}/g" templates/README.md > dist/README.md
-
       - name: Template action.yaml
         run: |
-          sed "s/{{TAG}}/${TAG}/g" templates/action.yaml > dist/action.yaml
+          sed "s/{{TAG}}/${TAG}/g" templates/action.yaml > action.yaml
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -35,7 +31,7 @@ jobs:
           tag_name: ${{ env.TAG }}
           name: ${{ env.RELEASE_NAME }}
           files: |
-            dist/README.md
-            dist/action.yaml
+            README.md
+            action.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
