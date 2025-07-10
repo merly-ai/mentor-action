@@ -21,6 +21,10 @@ jobs:
           echo "MAJOR_VERSION=$MAJOR" >> "$GITHUB_ENV"
           echo "RELEASE_NAME=release-$MAJOR" >> "$GITHUB_ENV"
 
+      - name: Template README.md
+        run: |
+          sed "s/{{TAG}}/${TAG}/g" templates/README.md > README.md
+
       - name: Template action.yaml
         run: |
           sed "s/{{TAG}}/${TAG}/g" templates/action.yaml > action.yaml
