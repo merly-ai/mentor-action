@@ -50,8 +50,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG }}
-          #name:     ${{ env.RELEASE_NAME }} # disable this in favor of using the semver as release name 
-          name:     ${{ env.TAG }}
+          name:     ${{ env.RELEASE_NAME }} # disable this in favor of using the semver as release name 
           files: |
             action.yaml
             README.md
