@@ -19,26 +19,8 @@ Runs **MerlyMentor** inside Docker against your repository, turning technical de
 ## 🚀 Quick Start
 
 ```yaml
-name: CI / Merly Mentor
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-
-jobs:
-  mentor-scan:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - uses: your-org/merly-mentor-check@v1.0.0
-        with:
-          mm-key: ${{ secrets.MM_KEY }}
-          checkout-code: true
-          # path: ./custom-path       # if you’ve checked out elsewhere
-          debug: false
+name: mentor
+uses: merly-ai/mentor-action@v1
 ```
 
 ---
@@ -58,20 +40,35 @@ jobs:
 
 1. **(Optional)** Checks out your repository  
 2. Binds your code into the container at `/repo`  
-3. Runs the MerlyMentor Docker image (pinned by SHA) as your runner user to avoid permission issues  
+3. Runs the MerlyMentor Docker image (pinned by version) as your runner user to avoid permission issues  
 4. Streams analysis results back into your workflow logs  
 
-Example command inside the action:
+## Example command for the action:
 
-```bash
-docker run --rm \
-  --user "$(id -u):$(id -g)" \
-  -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
-  -e REPO="/repo" \
-  -e MM_MODELS_PATH="/data/.models/" \
-  -v "${{ inputs.path }}:/repo" \
-  merlyai/mentor@sha256:52381fd64b58afb7698cd191af3061a3dcb8dbb2e5701cac216fdec93c2ddfb5 \
-  -D /repo --github-actions check [--debug --stdout]
+### You just want to try it out
+```yaml
+
+name: mentor
+uses: merly-ai/mentor-action@v1
+```
+
+### You have a license key
+```yaml
+
+name: mentor
+uses: merly-ai/mentor-action@v1
+  with:
+    mm-key: {{ secret.mentor-key }}
+```
+
+### Something not right and you want to enable debug mode 
+```yaml
+
+name: mentor
+uses: merly-ai/mentor-action@v1
+  with:
+    mm-key: {{ secret.mentor-key }}
+    debug: true
 ```
 
 ---

@@ -1,0 +1,59 @@
+name: Release on Tag
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+'  # semver tags like v1.2.3
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Fetch all branches to ensure 'main' is available
+          ref: main
+
+      - name: Set up Git for pushing changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Set up tag and version info
+        id: versioning
+        run: |
+          echo "TAG=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          MAJOR=$(echo "${GITHUB_REF_NAME}" | sed -E 's/^v([0-9]+).*/\1/')
+          echo "MAJOR_VERSION=$MAJOR" >> "$GITHUB_ENV"
+          echo "RELEASE_NAME=release-$MAJOR" >> "$GITHUB_ENV"
+
+      - name: Template README.md
+        run: |
+          sed "s/{{TAG}}/${TAG}/g" templates/README.md > README.md
+
+      - name: Template action.yaml
+        run: |
+          sed "s/{{TAG}}/${TAG}/g" templates/action.yaml > action.yaml
+
+      - name: Commit and push changes
+        run: |
+          git add README.md action.yaml
+          git commit -m "Release: Update templated files for version ${{ env.TAG }}" 
+          git push origin main  # Ensure this pushes to the correct branch
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name:     ${{ env.RELEASE_NAME }} # disable this in favor of using the semver as release name 
+          name:     ${{ env.TAG }}
+          files: |
+            action.yaml
+            README.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
