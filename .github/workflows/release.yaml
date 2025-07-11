@@ -3,7 +3,10 @@ name: Release on Tag
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'  # semver tags like v1.2.3
+      - 'v[0-9]+\.[0-9]+\.[0-9]+'  # semver tags like v1.2.3
+
+permissions:
+  contents: write
 
 jobs:
   release:
@@ -12,6 +15,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Fetch all branches to ensure 'main' is available
+          ref: main
+
+      - name: Set up Git for pushing changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Set up tag and version info
         id: versioning
@@ -29,13 +40,20 @@ jobs:
         run: |
           sed "s/{{TAG}}/${TAG}/g" templates/action.yaml > action.yaml
 
+      - name: Commit and push changes
+        run: |
+          git add README.md action.yaml
+          git commit -m "Release: Update templated files for version ${{ env.TAG }}" 
+          git push origin main  # Ensure this pushes to the correct branch
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG }}
-          name: ${{ env.RELEASE_NAME }}
+          name:     ${{ env.RELEASE_NAME }} # disable this in favor of using the semver as release name 
+          name:     ${{ env.TAG }}
           files: |
-            README.md
             action.yaml
+            README.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
