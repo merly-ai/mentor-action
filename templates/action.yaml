@@ -1,5 +1,5 @@
 # File: action.yaml
-name: "Merly Mentor Check"
+name: "Mentor Check"
 description: "Runs MerlyMentor inside Docker against your repository."
 branding:
   icon: check-circle
