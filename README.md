@@ -77,8 +77,10 @@ uses: merly-ai/mentor-action@v1
 
 **[Download Free Trial](https://www.merly.ai/early-access)**
 
+#### Latest Release is 
+v0.1.0
 ---
 
 ## 📄 License
 
-[Apache License 2.0](LICENSE) © Merly.ai
+MIT © Merly.ai
