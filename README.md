@@ -81,4 +81,4 @@ uses: merly-ai/mentor-action@v1
 
 ## 📄 License
 
-MIT © Merly.ai
+[Apache License 2.0](LICENSE) © Merly.ai
