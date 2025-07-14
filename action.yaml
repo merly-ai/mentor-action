@@ -6,7 +6,7 @@ branding:
   color: white
 
 inputs:
-  mm-key:
+  mm_key:
     description: "Merly API key (optional; if provided, must be 4×4 alphanumeric groups separated by hyphens)"
     required: false
     pattern: '^[A-Za-z0-9]{4}(?:-[A-Za-z0-9]{4}){3}$'
@@ -53,7 +53,7 @@ runs:
       shell: bash
       run: |
         docker run --rm \
-          -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
+          -e REGISTRATION_KEY="${{ inputs.mm_key }}" \
           -e REPO="/repo" \
           -e mm_models_root="/data/.models/" \
           -v "${{ inputs.path }}:/repo" \
