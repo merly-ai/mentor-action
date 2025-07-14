@@ -42,7 +42,7 @@ runs:
     - name: Sanity-check inputs
       shell: bash
       env:
-        MM_KEY:        ${{ inputs.mm-key }}
+        MM-KEY:        ${{ inputs.mm-key }}
         CHECKOUT_CODE: ${{ inputs.checkout-code }}
         PATH_INPUT:    ${{ inputs.path }}
         DEBUG_FLAG:    ${{ inputs.debug }}
