@@ -57,8 +57,8 @@ uses: merly-ai/mentor-action@v1
 
 name: mentor
 uses: merly-ai/mentor-action@v1
-  with:
-    mm-key: {{ secret.mentor_key }}
+with:
+  mm-key: {{ secret.mentor_key }}
 ```
 
 ### Something not right and you want to enable debug mode 
@@ -66,9 +66,9 @@ uses: merly-ai/mentor-action@v1
 
 name: mentor
 uses: merly-ai/mentor-action@v1
-  with:
-    mm-key: {{ secret.mentor_key }}
-    debug: true
+with:
+  mm-key: {{ secret.mentor_key }}
+  debug: true
 ```
 
 ---
@@ -78,7 +78,7 @@ uses: merly-ai/mentor-action@v1
 **[Download Free Trial](https://www.merly.ai/early-access)**
 
 #### Latest Release is 
-v0.8.0
+v0.8.1
 ---
 
 ## 📄 License
