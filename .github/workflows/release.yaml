@@ -57,14 +57,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-       # 6) Force‑move the “v1” tag up to this same SHA
       - name: Sync v1 tag to new semver
         run: |
           git fetch --tags                  # make sure we know about the existing v1
           git tag -f v1 ${{ env.TAG }}      # move v1 to point at the new semver tag
           git push origin refs/tags/v1 --force
 
-      # 7) Patch the published “v1” Release to target this commit
       - name: Update v1 GitHub Release
         uses: actions/github-script@v6
         with:
