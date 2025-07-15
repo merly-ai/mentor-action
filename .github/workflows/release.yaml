@@ -56,30 +56,3 @@ jobs:
             README.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Sync v1 tag to new semver
-        run: |
-          git fetch --tags                  # make sure we know about the existing v1
-          git tag -f v1 ${{ env.TAG }}      # move v1 to point at the new semver tag
-          git push origin refs/tags/v1 --force
-
-      - name: Update v1 GitHub Release
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            // 1) grab Release by the floating tag
-            const rel = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag: 'v1'
-            });
-
-            // 2) patch it so its target_commitish points at our new semver
-            await github.rest.repos.updateRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: rel.data.id,
-              tag_name: 'v1',
-              target_commitish: process.env.TAG
-            });
