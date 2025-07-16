@@ -78,7 +78,7 @@ with:
 **[Download Free Trial](https://www.merly.ai/early-access)**
 
 #### Latest Release is 
-v0.8.4
+v0.8.5
 ---
 
 ## 📄 License
