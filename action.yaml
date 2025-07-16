@@ -18,7 +18,7 @@ inputs:
   path:
     description: "Custom path to your repository (optional)"
     required: false
-    default: ${{ github.workspace }}
+    default: ''
   debug:
     description: "Turn on debug logs for Mentor"
     required: false
@@ -27,7 +27,7 @@ inputs:
   docker-tag:
     description: "Merly Mentor Docker image tag"
     required: false
-    default: "v0.8.2"
+    default: "v0.8.3"
     pattern: '^[A-Za-z0-9._:-]+$'
 
 runs:
@@ -42,9 +42,9 @@ runs:
     - name: Sanity-check inputs
       shell: bash
       env:
-        MM-KEY:        ${{ inputs.mm-key }}
+        MM_KEY:        ${{ inputs.mm-key }}
         CHECKOUT_CODE: ${{ inputs.checkout-code }}
-        PATH_INPUT:    ${{ inputs.path }}
+        PATH_INPUT:    ${{ github.workspace }}${{ inputs.path && format('/{0}', inputs.path) }}
         DEBUG_FLAG:    ${{ inputs.debug }}
         DOCKER_TAG:    ${{ inputs.docker-tag }}
       run: bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
@@ -56,7 +56,7 @@ runs:
           -e REGISTRATION_KEY="${{ inputs.mm-key }}" \
           -e REPO="/repo" \
           -e mm_models_root="/data/.models/" \
-          -v "${{ inputs.path }}:/repo" \
+          -v ${{ github.workspace }}${{ inputs.path && format('/{0}', inputs.path) }}:/repo \
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
