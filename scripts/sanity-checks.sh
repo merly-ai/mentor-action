@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Scrip starts here
 # avoid unbound‐variable errors by providing safe defaults
 CHECKOUT_CODE="${CHECKOUT_CODE:-false}"
 DEBUG_FLAG="${DEBUG_FLAG:-false}"
