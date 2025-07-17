@@ -27,7 +27,7 @@ inputs:
   docker-tag:
     description: "Merly Mentor Docker image tag"
     required: false
-    default: "v0.8.5"
+    default: "v0.8.6"
     pattern: '^[A-Za-z0-9._:-]+$'
 
 runs:
