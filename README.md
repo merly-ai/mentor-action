@@ -49,26 +49,26 @@ uses: merly-ai/mentor-action@v1
 
 ## 📋 Examples
 
-### Basic usage
+### You just want to try it out
 ```yaml
 name: mentor
 uses: merly-ai/mentor-action@v1
 ```
 
-### With API key
+### You have a license key
 ```yaml
 name: mentor
 uses: merly-ai/mentor-action@v1
 with:
-  mm-key: ${{ secrets.MENTOR_KEY }}
+  mm-key: ${{ secrets.mentor_key }}
 ```
 
-### Enable debug mode
+### Something not right and you want to enable debug mode 
 ```yaml
 name: mentor
 uses: merly-ai/mentor-action@v1
 with:
-  mm-key: ${{ secrets.MENTOR_KEY }}
+  mm-key: ${{ secrets.mentor_key }}
   debug: true
 ```
 
@@ -109,7 +109,7 @@ with:
 **[Download Free Trial](https://www.merly.ai/early-access)**
 
 #### Latest Release is 
-v0.10.0
+v0.10.1
 ---
 
 ## 📄 License
