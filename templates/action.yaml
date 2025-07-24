@@ -29,6 +29,16 @@ inputs:
     required: false
     default: "{{TAG}}"
     pattern: '^[A-Za-z0-9._:-]+$'
+  max-issue-count:
+    description: "Maximum number of new issues allowed before failing the pipeline"
+    required: false
+    default: 0
+    pattern: '^[0-9]+$'
+  max-issue-priority:
+    description: "Maximum priority of issue allowed before failing the pipeline"
+    required: false
+    default: 0
+    pattern: '^(?:[0-4]|Low|Medium|High|Critical)$'
 
 runs:
   using: "composite"
@@ -42,11 +52,13 @@ runs:
     - name: Sanity-check inputs
       shell: bash
       env:
-        MM_KEY:        ${{ inputs.mm-key }}
-        CHECKOUT_CODE: ${{ inputs.checkout-code }}
-        PATH_INPUT:    ${{ github.workspace }}${{ inputs.path && format('/{0}', inputs.path) }}
-        DEBUG_FLAG:    ${{ inputs.debug }}
-        DOCKER_TAG:    ${{ inputs.docker-tag }}
+        MM_KEY:             ${{ inputs.mm-key }}
+        CHECKOUT_CODE:      ${{ inputs.checkout-code }}
+        PATH_INPUT:         ${{ github.workspace }}${{ inputs.path && format('/{0}', inputs.path) }}
+        DEBUG_FLAG:         ${{ inputs.debug }}
+        DOCKER_TAG:         ${{ inputs.docker-tag }}
+        MAX_ISSUE_COUNT:    ${{ inputs.max-issue-count }}
+        MAX_ISSUE_PRIORITY: ${{ inputs.max-issue-priority }}
       run: bash "${GITHUB_ACTION_PATH}/scripts/sanity-checks.sh"
 
     - name: Run MerlyMentor in Docker
@@ -60,4 +72,6 @@ runs:
           -e GITHUB_STEP_SUMMARY="$GITHUB_STEP_SUMMARY" \
           -v "$GITHUB_STEP_SUMMARY:$GITHUB_STEP_SUMMARY" \
           merlyai/mentor:${{ inputs.docker-tag }} \
-          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }}
+          -D /repo --github-actions check ${{ inputs.debug == 'true' && '--debug --stdout' || '' }} \
+          --max-issue-priority ${{ inputs.max-issue-priority }} \
+          --max-issue-count ${{ inputs.max-issue-count }}
