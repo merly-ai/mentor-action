@@ -109,7 +109,7 @@ with:
 **[Download Free Trial](https://www.merly.ai/early-access)**
 
 #### Latest Release is 
-v0.10.2
+v0.9.0
 ---
 
 ## 📄 License
