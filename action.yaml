@@ -27,7 +27,7 @@ inputs:
   docker-tag:
     description: "Merly Mentor Docker image tag"
     required: false
-    default: "v0.11.1"
+    default: "v0.13.0"
     pattern: '^[A-Za-z0-9._:-]+$'
   max-issue-count:
     description: "Maximum number of new issues allowed before failing the pipeline"
